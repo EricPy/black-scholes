@@ -50,7 +50,7 @@ for volat in range_vol:
   # Calculate the call option prices
   for s in range_spot:
     # Calculate Call Option Price
-    call = black_scholes_call(s, strike, rf, time, volat)
+    call = black_scholes_call(s, strike, time, rf, volat)
 
     data_row.append(round(call, 2))
 
@@ -69,7 +69,7 @@ for volat in range_vol:
   # Calculate the put option prices
   for s in range_spot:
     # Calculate put Option Price
-    put = black_scholes_put(s, strike, rf, time, volat)
+    put = black_scholes_put(s, strike, time, rf, volat)
 
     data_row.append(round(put, 2))
 
@@ -77,8 +77,6 @@ for volat in range_vol:
   heatmap_data_put.append(data_row)
 
 heatmap_dataframe_put = pd.DataFrame(heatmap_data_put, index=range_vol, columns=range_spot)
-
-st.dataframe(heatmap_data_put)
 
 
 # Generate heatmap based on input
