@@ -14,11 +14,11 @@ st.write("### Input Data")
 
 col1, col2, col3 = st.columns(3) # Split input into 3 columns
 
-spot = col1.number_input("Spot Price", min_value=0.01, value=100) # underlying price
-strike = col1.number_input("Strike Price", min_value=0.01, value=100 ) # strike price
+spot = col1.number_input("Spot Price", min_value=0.01, value=100.0) # underlying price
+strike = col1.number_input("Strike Price", min_value=0.01, value=100.0) # strike price
 
-time = col2.number_input("Time to Maturity", min_value=0.083, value=1) # time to expiration
-rf = (col2.number_input("Risk-free rate (in %)", min_value=0.01, value=5)) / 100 # risk-free rate
+time = col2.number_input("Time to Maturity", min_value=0.083, value=1.0) # time to expiration
+rf = (col2.number_input("Risk-free rate (in %)", min_value=0.01, value=5.0)) / 100.0 # risk-free rate
 
 vol = col3.number_input("Volatility (σ)", min_value=0.0, value=0.2) # volatility (σ)
 
