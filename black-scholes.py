@@ -84,7 +84,7 @@ sns.heatmap(heatmap_dataframe_call, cmap="viridis", annot=True, fmt=".2f", annot
 # Add Titles
 plt.xlabel("Spot Price", fontsize=8)
 plt.ylabel("Volatility", fontsize=8)
-plt.title("Call Option Price", fontsize=12)
+plt.title("Call Option Pricing", fontsize=12)
 
 heatmap_col1.pyplot(fig1)
 
@@ -95,6 +95,6 @@ sns.heatmap(heatmap_dataframe_put, cmap="viridis", annot=True, fmt=".2f", annot_
 # Add Titles
 plt.xlabel("Spot Price", fontsize=8)
 plt.ylabel("Volatility", fontsize=8)
-plt.title("Put Option Price", fontsize=12)
+plt.title("Put Option Pricing", fontsize=12)
 
 heatmap_col2.pyplot(fig2)
