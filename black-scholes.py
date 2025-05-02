@@ -78,23 +78,23 @@ sns.set_context("notebook", font_scale=0.8)
 heatmap_col1, heatmap_col2 = st.columns(2)
 
 # Plot Call Option Heatmap
-fig, ax = plt.subplots()
-sns.heatmap(heatmap_dataframe_call, cmap="viridis", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax)
+fig1, ax1 = plt.subplots()
+sns.heatmap(heatmap_dataframe_call, cmap="viridis", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax1)
 
 # Add Titles
 plt.xlabel("Spot Price", fontsize=8)
 plt.ylabel("Volatility", fontsize=8)
 plt.title("Call Option Price", fontsize=12)
 
-heatmap_col1.st.pyplot(fig)
+heatmap_col1.st.pyplot(fig1)
 
 # Plot Put Option Heatmap
-fig, ax = plt.subplots()
-sns.heatmap(heatmap_dataframe_put, cmap="viridis", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax)
+fig2, ax2 = plt.subplots()
+sns.heatmap(heatmap_dataframe_put, cmap="viridis", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax2)
 
 # Add Titles
 plt.xlabel("Spot Price", fontsize=8)
 plt.ylabel("Volatility", fontsize=8)
 plt.title("Put Option Price", fontsize=12)
 
-heatmap_col2.st.pyplot(fig)
+heatmap_col2.st.pyplot(fig2)
