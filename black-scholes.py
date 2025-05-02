@@ -102,7 +102,7 @@ heatmap_col2.pyplot(fig2)
 # Create PnL dataframes
 heatmap_dataframe_call_pnl = heatmap_dataframe_call - purchase
 heatmap_dataframe_put_pnl = heatmap_dataframe_put - purchase
-heatmap_col3, heatmap_col4 = st.columns(2)
+heatmap_pnl_col1, heatmap_pnl_col2 = st.columns(2)
 
 # Plot Call Option Heatmap
 fig3, ax3 = plt.subplots()
@@ -112,7 +112,7 @@ plt.xlabel("Spot Price", fontsize=8)
 plt.ylabel("Volatility", fontsize=8)
 plt.title("Call Option PnL", fontsize=12)
 
-heatmap_col3.pyplot(fig3)
+heatmap_pnl_col1.pyplot(fig3)
 
 # Plot Put Option Heatmap
 fig4, ax4 = plt.subplots()
@@ -122,4 +122,4 @@ plt.xlabel("Spot Price", fontsize=8)
 plt.ylabel("Volatility", fontsize=8)
 plt.title("Put Option PnL", fontsize=12)
 
-heatmap_col3.pyplot(fig4)
+heatmap_pnl_col2.pyplot(fig4)
