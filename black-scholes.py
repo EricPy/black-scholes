@@ -24,6 +24,11 @@ rf = (col2.number_input("Risk-free rate (in %)", min_value=0.01, value=5.0)) / 1
 vol = col3.number_input("Volatility (σ)", min_value=0.0, value=0.2) # volatility (σ)
 purchase = col3.number_input("Purchase Price", min_value=0.01, value=100.0) # Option purchase price
 
+call_option = black_scholes_call(spot, strike, time, rf, vol)
+put_option = black_scholes_put(spot, strike, time, rf, vol)
+
+st.write(f"Call Option: {call_option}")
+st.write(f"Put Option: {put_option}")
 
 # Create range for rows and columns
 min_vol = vol - 0.1
