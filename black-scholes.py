@@ -33,8 +33,8 @@ st.write(f"Put Option: {put_option}")
 # Create range for rows and columns
 min_vol = vol - 0.1
 max_vol = vol + 0.1
-min_spot = spot - 10
-max_spot = spot + 10
+min_spot = spot - 9
+max_spot = spot + 9
 
 range_vol = create_range(min_vol, max_vol, 10, 2)
 range_spot = create_range(min_spot, max_spot, 10)
