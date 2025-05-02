@@ -9,6 +9,6 @@ import streamlit as st
 sns.set_context("notebook", font_scale=0.8)
 
 # Request user input
-st.title("Black-Scholes Options Pricing and PnL")
+st.title("Black-Scholes Options Price Simulation")
 
 # Generate heatmap based on input
