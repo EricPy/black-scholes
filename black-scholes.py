@@ -21,6 +21,7 @@ time = col2.number_input("Time to Maturity", min_value=0.083, value=1.0) # time 
 rf = (col2.number_input("Risk-free rate (in %)", min_value=0.01, value=5.0)) / 100.0 # risk-free rate
 
 vol = col3.number_input("Volatility (σ)", min_value=0.0, value=0.2) # volatility (σ)
+purchase = col3.number_input("Purchase Price", min_value=0.01, value=100.0) # Option purchase price
 
 # Generate heatmap based on input
 sns.set_context("notebook", font_scale=0.8)
