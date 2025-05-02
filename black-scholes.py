@@ -98,3 +98,28 @@ plt.ylabel("Volatility", fontsize=8)
 plt.title("Put Option Pricing", fontsize=12)
 
 heatmap_col2.pyplot(fig2)
+
+# Create PnL dataframes
+heatmap_dataframe_call_pnl = heatmap_dataframe_call - purchase
+heatmap_dataframe_put_pnl = heatmap_dataframe_put - purchase
+heatmap_col3, heatmap_col4 = st.columns(2)
+
+# Plot Call Option Heatmap
+fig3, ax3 = plt.subplots()
+sns.heatmap(heatmap_dataframe_call_pnl, cmap="RdYlGn", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax3)
+
+plt.xlabel("Spot Price", fontsize=8)
+plt.ylabel("Volatility", fontsize=8)
+plt.title("Call Option PnL", fontsize=12)
+
+heatmap_col3.pyplot(fig3)
+
+# Plot Put Option Heatmap
+fig4, ax4 = plt.subplots()
+sns.heatmap(heatmap_dataframe_put_pnl, cmap="RdYlGn", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax4)
+
+plt.xlabel("Spot Price", fontsize=8)
+plt.ylabel("Volatility", fontsize=8)
+plt.title("Put Option PnL", fontsize=12)
+
+heatmap_col3.pyplot(fig4)
