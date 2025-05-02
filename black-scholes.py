@@ -78,7 +78,6 @@ for volat in range_vol:
 
 heatmap_dataframe_put = pd.DataFrame(heatmap_data_put, index=range_vol, columns=range_spot)
 
-
 # Generate heatmap based on input
 sns.set_context("notebook", font_scale=0.8)
 heatmap_col1, heatmap_col2 = st.columns(2)
