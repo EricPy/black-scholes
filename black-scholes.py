@@ -86,7 +86,7 @@ plt.xlabel("Spot Price", fontsize=8)
 plt.ylabel("Volatility", fontsize=8)
 plt.title("Call Option Price", fontsize=12)
 
-heatmap_col1.st.pyplot(fig1)
+heatmap_col1.pyplot(fig1)
 
 # Plot Put Option Heatmap
 fig2, ax2 = plt.subplots()
@@ -97,4 +97,4 @@ plt.xlabel("Spot Price", fontsize=8)
 plt.ylabel("Volatility", fontsize=8)
 plt.title("Put Option Price", fontsize=12)
 
-heatmap_col2.st.pyplot(fig2)
+heatmap_col2.pyplot(fig2)
