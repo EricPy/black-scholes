@@ -7,126 +7,181 @@ import seaborn as sns
 import streamlit as st
 
 # App title
-st.title("Black-Scholes Options Price Simulation")
+st.title("Black-Scholes Pricing 📊")
 
 
 # Request user input
-st.write("### Input Simulaiton Data")
+with st.container(border=True):
+    st.write("### Option Value Calculator")
 
-col1, col2, col3 = st.columns(3) # Split input into 3 columns
+    col1, col2, col3 = st.columns(3) # Split input into 3 columns
 
-spot = col1.number_input("Spot Price", min_value=0.01, value=45.0) # underlying price
-strike = col1.number_input("Strike Price", min_value=0.01, value=40.0) # strike price
+    spot = col1.number_input("Spot Price", min_value=0.01, value=45.0) # underlying price
+    time = col1.number_input("Time to Maturity (years)", min_value=0.083, value=1.5) # time to expiration
 
-time = col2.number_input("Time to Maturity", min_value=0.083, value=1.5) # time to expiration
-rf = col2.number_input("Risk-free rate (in %)", min_value=0.01, value=10.0) # risk-free rate
-rf = rf / 100
+    strike = col2.number_input("Strike Price", min_value=0.01, value=40.0) # strike price
+    rf = col2.number_input("Risk-free rate (in %)", min_value=0.01, value=10.0) # risk-free rate
+    rf = rf / 100
 
-vol = col3.number_input("Volatility (σ)", min_value=0.0, value=0.2) # volatility (σ)
-purchase = col3.number_input("Purchase Price", min_value=0.01, value=100.0) # Option purchase price
-
-call_option = black_scholes_call(spot, strike, time, rf, vol)
-put_option = black_scholes_put(spot, strike, time, rf, vol)
-
-with st.container():
-  st.write(f"Call Option: {call_option}")
-  
-st.write(f"Put Option: {put_option}")
-
-# Create range for rows and columns
-min_vol = vol - 0.1
-max_vol = vol + 0.1
-min_spot = spot - 9
-max_spot = spot + 9
-
-range_vol = create_range(min_vol, max_vol, 10, 2)
-range_spot = create_range(min_spot, max_spot, 10)
+    vol = col3.number_input("Volatility (σ)", min_value=0.0, value=0.2) # volatility (σ)
+    #purchase = col3.number_input("Purchase Price", min_value=0.01, value=40.0) # Option purchase price
 
 
-# Create Heatmap Dataframe for Call options
-heatmap_data_call = []
+    call_option = black_scholes_call(spot, strike, time, rf, vol)
+    put_option = black_scholes_put(spot, strike, time, rf, vol)
 
-for volat in range_vol:
-  data_row = []
+    # Calculation Result Display
+    col_value_1, col_value_2 = st.columns(2)
 
-  # Calculate the call option prices
-  for s in range_spot:
-    # Calculate Call Option Price
-    call = black_scholes_call(s, strike, time, rf, volat)
+    font_size = "24px"
+    call_value_style = f"color: #FFFFFF; font-size: {font_size}; margin-bottom: 0px; font-weight: 600;"
+    put_value_style = f"font-size: {font_size}; margin-bottom: 0px; font-weight: 600;"
 
-    data_row.append(round(call, 2))
+    with col_value_1:
+      with st.container():
+        st.markdown(
+          f"""
+          <div style='
+              background-color: #45ad5b;
+              padding: 20px;
+              border-radius: 20px;
+              text-align: center;
+              margin: 20px 10px 30px 5px;
+          '> 
+              <p style='{call_value_style}'>Call Option Value:</p>
+              <p style='{call_value_style}'>{call_option:.2f}</p>
+          </div>
+          """, 
+          unsafe_allow_html=True
+        )
 
-  # Append row to the data
-  heatmap_data_call.append(data_row)
+    with col_value_2:
+      with st.container():
+        st.markdown(
+          f"""
+          <div style='
+              background-color: #fac474;
+              padding: 20px;
+              border-radius: 20px;
+              text-align: center;
+              margin: 20px 5px 30px 10px;
+          '>
+              <p style='{put_value_style}'>Put Option Value:</p>
+              <p style='{put_value_style}'>{put_option:.2f}</p>
+          </div>
+          """,
+          unsafe_allow_html=True
+        )
 
-heatmap_dataframe_call = pd.DataFrame(heatmap_data_call, index=range_vol, columns=range_spot)
+with st.container(border=True):
+    # Create range for rows and columns
+    st.write("### Pricing Heatmap")
+
+    min_vol = vol - 0.1
+    max_vol = vol + 0.1
+    min_spot = spot - 9
+    max_spot = spot + 9
+
+    col1_range, col2_range = st.columns(2)
+
+    min_vol = col1_range.slider("Minimum Volatility", 0.0, 1.0, min_vol)
+    min_spot = col1_range.number_input("Minimum Spot Price", 0.01, value=min_spot)
+
+    max_vol = col2_range.slider("Maximum Volatility", 0.0, 1.0, max_vol)
+    max_spot = col2_range.number_input("Maxmimum Spot Price", 1.0, value=max_spot)
+
+    range_vol = create_range(min_vol, max_vol, 10, 2)
+    range_spot = create_range(min_spot, max_spot, 10)
 
 
-# Create Heatmap Dataframe for Call options
-heatmap_data_put = []
+    # Create Heatmap Dataframe for Call options
+    heatmap_data_call = []
 
-for volat in range_vol:
-  data_row = []
+    for volat in range_vol:
+      data_row = []
 
-  # Calculate the put option prices
-  for s in range_spot:
-    # Calculate put Option Price
-    put = black_scholes_put(s, strike, time, rf, volat)
+      # Calculate the call option prices
+      for s in range_spot:
+        # Calculate Call Option Price
+        call = black_scholes_call(s, strike, time, rf, volat)
 
-    data_row.append(round(put, 2))
+        data_row.append(round(call, 2))
 
-  # Append row to the data
-  heatmap_data_put.append(data_row)
+      # Append row to the data
+      heatmap_data_call.append(data_row)
 
-heatmap_dataframe_put = pd.DataFrame(heatmap_data_put, index=range_vol, columns=range_spot)
+    heatmap_dataframe_call = pd.DataFrame(heatmap_data_call, index=range_vol, columns=range_spot)
 
-# Generate heatmap based on input
-sns.set_context("notebook", font_scale=0.8)
-heatmap_col1, heatmap_col2 = st.columns(2)
 
-# Plot Call Option Heatmap
-fig1, ax1 = plt.subplots()
-sns.heatmap(heatmap_dataframe_call, cmap="viridis", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax1)
+    # Create Heatmap Dataframe for Call options
+    heatmap_data_put = []
 
-# Add Titles
-plt.xlabel("Spot Price", fontsize=8)
-plt.ylabel("Volatility", fontsize=8)
-plt.title("Call Option Pricing", fontsize=12)
+    for volat in range_vol:
+      data_row = []
 
-heatmap_col1.pyplot(fig1)
+      # Calculate the put option prices
+      for s in range_spot:
+        # Calculate put Option Price
+        put = black_scholes_put(s, strike, time, rf, volat)
 
-# Plot Put Option Heatmap
-fig2, ax2 = plt.subplots()
-sns.heatmap(heatmap_dataframe_put, cmap="viridis", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax2)
+        data_row.append(round(put, 2))
 
-# Add Titles
-plt.xlabel("Spot Price", fontsize=8)
-plt.ylabel("Volatility", fontsize=8)
-plt.title("Put Option Pricing", fontsize=12)
+      # Append row to the data
+      heatmap_data_put.append(data_row)
 
-heatmap_col2.pyplot(fig2)
+    heatmap_dataframe_put = pd.DataFrame(heatmap_data_put, index=range_vol, columns=range_spot)
+
+    # Generate heatmap based on input
+    sns.set_context("notebook", font_scale=0.8)
+    heatmap_col1, heatmap_col2 = st.columns(2)
+
+    # Plot Call Option Heatmap
+    fig1, ax1 = plt.subplots()
+    sns.heatmap(heatmap_dataframe_call, cmap="viridis", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax1)
+
+    # Add Titles
+    plt.xlabel("Spot Price", fontsize=8)
+    plt.ylabel("Volatility", fontsize=8)
+    plt.title("Call Option Pricing", fontsize=12)
+
+    heatmap_col1.pyplot(fig1)
+
+    # Plot Put Option Heatmap
+    fig2, ax2 = plt.subplots()
+    sns.heatmap(heatmap_dataframe_put, cmap="viridis", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax2)
+
+    # Add Titles
+    plt.xlabel("Spot Price", fontsize=8)
+    plt.ylabel("Volatility", fontsize=8)
+    plt.title("Put Option Pricing", fontsize=12)
+
+    heatmap_col2.pyplot(fig2)
 
 # Create PnL dataframes
-heatmap_dataframe_call_pnl = heatmap_dataframe_call - purchase
-heatmap_dataframe_put_pnl = heatmap_dataframe_put - purchase
-heatmap_pnl_col1, heatmap_pnl_col2 = st.columns(2)
+with st.container(border=True):
+    st.write("### Simulated Profit & Loss")
+    purchase = st.number_input("Purchase Price", min_value=0.01, value=40.0) # Option purchase price
 
-# Plot Call Option Heatmap
-fig3, ax3 = plt.subplots()
-sns.heatmap(heatmap_dataframe_call_pnl, cmap="RdYlGn", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax3)
+    heatmap_dataframe_call_pnl = heatmap_dataframe_call - purchase
+    heatmap_dataframe_put_pnl = heatmap_dataframe_put - purchase
+    heatmap_pnl_col1, heatmap_pnl_col2 = st.columns(2)
 
-plt.xlabel("Spot Price", fontsize=8)
-plt.ylabel("Volatility", fontsize=8)
-plt.title("Call Option PnL", fontsize=12)
+    # Plot Call Option Heatmap
+    fig3, ax3 = plt.subplots()
+    sns.heatmap(heatmap_dataframe_call_pnl, cmap="RdYlGn", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax3)
 
-heatmap_pnl_col1.pyplot(fig3)
+    plt.xlabel("Spot Price", fontsize=8)
+    plt.ylabel("Volatility", fontsize=8)
+    plt.title("Call Option PnL", fontsize=12)
 
-# Plot Put Option Heatmap
-fig4, ax4 = plt.subplots()
-sns.heatmap(heatmap_dataframe_put_pnl, cmap="RdYlGn", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax4)
+    heatmap_pnl_col1.pyplot(fig3)
 
-plt.xlabel("Spot Price", fontsize=8)
-plt.ylabel("Volatility", fontsize=8)
-plt.title("Put Option PnL", fontsize=12)
+    # Plot Put Option Heatmap
+    fig4, ax4 = plt.subplots()
+    sns.heatmap(heatmap_dataframe_put_pnl, cmap="RdYlGn", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax4)
 
-heatmap_pnl_col2.pyplot(fig4)
+    plt.xlabel("Spot Price", fontsize=8)
+    plt.ylabel("Volatility", fontsize=8)
+    plt.title("Put Option PnL", fontsize=12)
+
+    heatmap_pnl_col2.pyplot(fig4)
