@@ -75,7 +75,7 @@ with st.container(border=True):
 
 with st.container(border=True):
     # Create range for rows and columns
-    st.write("### Pricing Heatmap")
+    st.write("### Simulated Option Price Surface")
 
     min_vol = vol - 0.1
     max_vol = vol + 0.1
