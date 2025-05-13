@@ -28,7 +28,9 @@ purchase = col3.number_input("Purchase Price", min_value=0.01, value=100.0) # Op
 call_option = black_scholes_call(spot, strike, time, rf, vol)
 put_option = black_scholes_put(spot, strike, time, rf, vol)
 
-st.write(f"Call Option: {call_option}")
+with st.container():
+  st.write(f"Call Option: {call_option}")
+  
 st.write(f"Put Option: {put_option}")
 
 # Create range for rows and columns
