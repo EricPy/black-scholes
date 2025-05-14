@@ -17,7 +17,6 @@ class BsInput(Base):
     bsoutputs = relationship('BsOutput', back_populates='bsinput')
 
 
-
 class BsOutput(Base):
     __tablename__ = 'bsoutputs'
     calcoutput_id = Column(Integer, primary_key=True)
