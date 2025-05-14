@@ -159,10 +159,13 @@ with st.container(border=True):
 # Create PnL dataframes
 with st.container(border=True):
     st.write("### Simulated Profit & Loss")
-    purchase = st.number_input("Purchase Price", min_value=0.01, value=40.0) # Option purchase price
+    
+    col1_pur, col2_pur = st.columns(2)
+    purchase_call = col1_pur.number_input("Call Purchase Price", min_value=0.01, value=40.0) # Option purchase price
+    purchase_put = col2_pur.number_input("Put Purchase Price", min_value=0.01, value=40.0) # Option purchase price
 
-    heatmap_dataframe_call_pnl = heatmap_dataframe_call - purchase
-    heatmap_dataframe_put_pnl = heatmap_dataframe_put - purchase
+    heatmap_dataframe_call_pnl = heatmap_dataframe_call - purchase_call
+    heatmap_dataframe_put_pnl = heatmap_dataframe_put - purchase_put
     heatmap_pnl_col1, heatmap_pnl_col2 = st.columns(2)
 
     # Plot Call Option Heatmap
