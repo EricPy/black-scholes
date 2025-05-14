@@ -74,7 +74,7 @@ with st.container(border=True):
 # Create Pricing Heatmap
 with st.container(border=True):
     # Create range for rows and columns
-    st.write("### Simulated Option Price Surface")
+    st.write("### Option Price Shock Test")
 
     min_vol = vol - 0.1
     max_vol = vol + 0.1
@@ -83,10 +83,10 @@ with st.container(border=True):
 
     col1_range, col2_range = st.columns(2)
 
-    min_vol = col1_range.slider("Minimum Volatility", 0.0, 1.0, min_vol)
+    min_vol = col1_range.slider("Minimum Volatility", 0.01, 1.0, min_vol)
     min_spot = col1_range.number_input("Minimum Spot Price", 0.01, value=min_spot)
 
-    max_vol = col2_range.slider("Maximum Volatility", 0.0, 1.0, max_vol)
+    max_vol = col2_range.slider("Maximum Volatility", 0.01, 1.0, max_vol)
     max_spot = col2_range.number_input("Maxmimum Spot Price", 1.0, value=max_spot)
 
     range_vol = create_range(min_vol, max_vol, 10, 2)
