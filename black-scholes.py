@@ -15,15 +15,15 @@ with st.container(border=True):
 
     col1_bottom, col2_bottom = st.columns(2)
 
-    spot = col1_bottom.number_input("Spot Price", min_value=0.01, value=45.0) # underlying price
+    spot = col1_bottom.number_input("Spot Price", min_value=0.01, value=40.0) # underlying price
     strike = col2_bottom.number_input("Strike Price", min_value=0.01, value=40.0) # strike price
 
     col1, col2, col3 = st.columns(3) # Split input into 3 columns
 
     time = col1.number_input("Time to Maturity (years)", min_value=0.083, value=1.5) # time to expiration
-    rf = col2.number_input("Risk-free rate (in %)", min_value=0.01, value=10.0) # risk-free rate
+    rf = col2.number_input("Risk-free rate (in %)", min_value=0.01, value=6.0) # risk-free rate
     rf = rf / 100
-    vol = col3.number_input("Volatility (σ)", min_value=0.0, value=0.2) # volatility (σ)
+    vol = col3.number_input("Volatility (σ)", min_value=0.0, value=0.5) # volatility (σ)
 
     call_option = black_scholes_call(spot, strike, time, rf, vol)
     put_option = black_scholes_put(spot, strike, time, rf, vol)
@@ -161,8 +161,8 @@ with st.container(border=True):
     st.write("### Simulated Profit & Loss")
     
     col1_pur, col2_pur = st.columns(2)
-    purchase_call = col1_pur.number_input("Call Purchase Price", min_value=0.01, value=40.0) # Option purchase price
-    purchase_put = col2_pur.number_input("Put Purchase Price", min_value=0.01, value=40.0) # Option purchase price
+    purchase_call = col1_pur.number_input("Call Purchase Price", min_value=0.01, value=10.0) # Option purchase price
+    purchase_put = col2_pur.number_input("Put Purchase Price", min_value=0.01, value=10.0) # Option purchase price
 
     heatmap_dataframe_call_pnl = heatmap_dataframe_call - purchase_call
     heatmap_dataframe_put_pnl = heatmap_dataframe_put - purchase_put
