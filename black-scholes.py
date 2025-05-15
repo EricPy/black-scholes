@@ -7,8 +7,8 @@ from scipy.stats import norm
 import seaborn as sns
 import streamlit as st
 
-
 # App title
+st.set_page_config("Black-Scholes Pricing Model")
 st.title("Black-Scholes Pricing 📊")
 
 # Simple Black-Scholes Options Calculator
