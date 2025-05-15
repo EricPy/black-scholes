@@ -1,6 +1,7 @@
+hashlib
 matplotlib
 pandas
 scipy
 seaborn
+streamlit
 sqlalchemy
-hashlib
