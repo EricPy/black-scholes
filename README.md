@@ -1,5 +1,4 @@
-# black-scholes
-📊 Black-Scholes Option Pricing App
+# 📊 Black-Scholes Option Pricing App
 This is a Streamlit application for:
 - Calculating Black-Scholes option prices
 - Simulating profit & loss (PnL) scenarios
