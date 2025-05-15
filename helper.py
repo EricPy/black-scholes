@@ -38,7 +38,12 @@ def create_range(minimum, maximum, n, decimals=0):
 
   return data_range
 
-# Hashing function
+# Hashing function for input
 def hash_input(stockp, strikep, interestr, vol, time):
   input_str = f"{round(stockp, 6)}-{round(strikep, 6)}-{round(interestr, 6)}-{round(vol, 6)}-{round(time, 6)}"
+  return hl.sha256(input_str.encode()).hexdigest()
+
+# Hashing function for output
+def hash_output(vol_shock, stockp_shock, optionp, iscall, calc_id):
+  input_str = f"{round(vol_shock, 6)}-{round(stockp_shock, 6)}-{round(optionp, 6)}-{int(iscall)}-{calc_id}"
   return hl.sha256(input_str.encode()).hexdigest()

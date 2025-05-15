@@ -1,3 +1,4 @@
+from helper import hash_output
 import pandas as pd
 from sqlalchemy import create_engine, Integer, String, Float, Boolean, Column, ForeignKey, func, UniqueConstraint
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
@@ -11,7 +12,7 @@ class BsInput(Base):
     __table_args__ = (
         UniqueConstraint('input_hash', name='uix_input_hash'),
     )
-    
+
     calc_id = Column(Integer, primary_key=True)
     stockp = Column(Float, nullable=False)
     strikep = Column(Float, nullable=False)
@@ -24,12 +25,17 @@ class BsInput(Base):
 
 class BsOutput(Base):
     __tablename__ = 'bsoutputs'
+    __table_args__ = (
+        UniqueConstraint('output_hash', name='uix_output_hash'),
+    )
+
     calcoutput_id = Column(Integer, primary_key=True)
     vol_shock = Column(Float, nullable=True) # Stores the increment from the base volatility input
     stockp_shock = Column(Float, nullable=True) # Stores the increment from the base stock price input
     optionp = Column(Float, nullable=True)
     iscall = Column(Boolean, nullable=True)
     calc_id = Column(Integer, ForeignKey('bsinputs.calc_id'))
+    output_hash = Column(String, nullable=False)
 
     bsinput = relationship('BsInput', back_populates='bsoutputs')
 
@@ -64,12 +70,28 @@ def save_output(session, output_df: pd.DataFrame, iscall: bool, base_vol, base_s
     
     for index, row in output_df.iterrows():
         for stock_price in row.index:
+            # Check if the output is unique
+            output_data = {
+                "vol_shock": round((index - base_vol), 2), # The change / shock in volume from the base input
+                "stockp_shock": round((stock_price - base_stockp), 2), # The change / shock in stock price from the base input
+                "optionp": round(row[stock_price], 2),
+                "iscall": iscall,
+                "calc_id": input_id
+            }
+
+            # Check the hash
+            output_hash = hash_output(**output_data)
+            existing = session.query(BsOutput).filter_by(output_hash=output_hash).first()
+            if existing:
+                continue
+
             bsoutput = BsOutput(
-                vol_shock=(index - base_vol), # The change / shock in volume from the base input
-                stockp_shock=(stock_price - base_stockp), # The change / shock in stock price from the base input
-                optionp=row[stock_price],
+                vol_shock=output_data["vol_shock"],
+                stockp_shock=output_data["stockp_shock"],
+                optionp=output_data["optionp"],
                 iscall=iscall,
-                calc_id=input_id
+                calc_id=input_id,
+                output_hash=output_hash
             )
 
             session.add(bsoutput)
