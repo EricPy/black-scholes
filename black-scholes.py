@@ -218,6 +218,3 @@ if st.button("Store Calculation"):
     st.warning("Failed to save data")
   finally:
     session.close()
-
-
-# Create a dataframe of most recent saves, access 
