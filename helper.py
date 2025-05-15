@@ -1,3 +1,4 @@
+import hashlib as hl
 import math
 from scipy.stats import norm
 
@@ -36,3 +37,8 @@ def create_range(minimum, maximum, n, decimals=0):
     data_range.append(round((minimum + steps * i), decimals))
 
   return data_range
+
+# Hashing function
+def hash_input(stockp, strikep, interestr, vol, time):
+  input_str = f"{round(stockp, 6)}-{round(strikep, 6)}-{round(interestr, 6)}-{round(vol, 6)}-{round(time, 6)}"
+  return hl.sha256(input_str.encode()).hexdigest()

@@ -1,10 +1,12 @@
-from helper import black_scholes_call, black_scholes_put, create_range
+from db import Session, save_input, save_output
+from helper import black_scholes_call, black_scholes_put, create_range, hash_input
 import math
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.stats import norm
 import seaborn as sns
 import streamlit as st
+
 
 # App title
 st.title("Black-Scholes Pricing 📊")
@@ -188,5 +190,34 @@ with st.container(border=True):
 
     heatmap_pnl_col2.pyplot(fig4)
 
-# Database Wrangling
+# Create inputs dataframe
+input_data = {
+   "stockp": spot,
+   "strikep": strike,
+   "interestr": rf,
+   "vol": vol,
+   "time": time
+}
 
+input_dataframe = pd.DataFrame([input_data])
+input_hash = hash_input(**input_data)
+
+# Create button to save data for later query
+if st.button("Store Calculation"):
+  session = Session()
+  
+  try:
+    input_id = save_input(input_hash, session, input_dataframe)
+    save_output(session=session, output_df=heatmap_dataframe_call, iscall=True, base_vol=input_data["vol"], base_stockp=input_data["stockp"], input_id=input_id)
+    save_output(session=session, output_df=heatmap_dataframe_put, iscall=False, base_vol=input_data["vol"], base_stockp=input_data["stockp"], input_id=input_id)
+    session.commit()
+    st.success("Data saved successfully!")
+  except Exception as e:
+    session.rollback()
+    print("Rolled back due to:", e)
+    st.warning("Failed to save data")
+  finally:
+    session.close()
+
+
+# Create a dataframe of most recent saves, access 
