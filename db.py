@@ -182,8 +182,8 @@ def show_recent(session, number_of_entries):
             "Strike": input_.strikep,
             "Base Vol.": input_.vol,
             "Base Spot Price": input_.stockp,
-            "Shock Vol.": volume_shock,
-            "Shock Spot Price": price_shock,
+            "Vol. Shock": volume_shock,
+            "Spot Price Shock": price_shock,
             "Base Option Value": round(base_value, 2),
             "Shocked Option Value": round(output.optionp, 2)
         }
