@@ -3,7 +3,7 @@ import pandas as pd
 from sqlalchemy import create_engine, Integer, String, Float, Boolean, Column, ForeignKey, func, UniqueConstraint, desc
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
-engine = create_engine('sqlite:///bsorm.db')
+engine = create_engine('sqlite:///bsdatabase.db')
 
 Base = declarative_base()
 
