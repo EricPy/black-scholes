@@ -1,6 +1,6 @@
-from helper import hash_output
+from helper import hash_output, black_scholes_call, black_scholes_put
 import pandas as pd
-from sqlalchemy import create_engine, Integer, String, Float, Boolean, Column, ForeignKey, func, UniqueConstraint
+from sqlalchemy import create_engine, Integer, String, Float, Boolean, Column, ForeignKey, func, UniqueConstraint, desc
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 
 engine = create_engine('sqlite:///bsorm.db')
@@ -128,3 +128,66 @@ def save_single_output(session, vol, stockp, optionp, iscall, calc_id, base_vol,
     else:
         print("Entry already exists, not saved again.")
         return False
+    
+# Function that outputs the most recent entries as pandas dataframe
+def show_recent(session, number_of_entries):
+    """
+    Grab N latest entries into outputs
+    and return a dataframe with the relevant data
+    """
+
+    # Grab the most recent entries into the SQL database
+    half = number_of_entries // 2
+
+    recent_entries_call = (
+        session.query(BsOutput, BsInput)
+        .join(BsInput, BsOutput.calc_id == BsInput.calc_id)
+        .filter(BsOutput.iscall == True)
+        .order_by(BsOutput.calcoutput_id.desc())
+        .limit(half)
+        .all()
+    )
+
+    recent_entries_put = (
+        session.query(BsOutput, BsInput)
+        .join(BsInput, BsOutput.calc_id == BsInput.calc_id)
+        .filter(BsOutput.iscall == False)
+        .order_by(BsOutput.calcoutput_id.desc())
+        .limit(half)
+        .all()
+    )
+
+    combined_result = recent_entries_call + recent_entries_put
+
+    # Create dataframe with the relevant data
+    result_df = []
+
+    for output, input_ in combined_result:
+        
+        # Calculate Base Option Value
+        if output.iscall:
+            base_value = black_scholes_call(input_.stockp, input_.strikep, input_.time, input_.interestr, input_.vol)
+        else:
+            base_value = black_scholes_put(input_.stockp, input_.strikep, input_.time, input_.interestr, input_.vol)
+
+        # Formatting for clarity
+        option_type = "Call" if output.iscall else "Put"
+        volume_shock = f"+ {output.vol_shock}" if output.vol_shock > 0 else f"{output.vol_shock}"
+        price_shock = f"+ {output.stockp_shock}" if output.stockp_shock > 0 else f"{output.stockp_shock}"
+        
+        row = {
+            "Type": option_type,
+            "Rf": input_.interestr,
+            "TTM": input_.time,
+            "Strike": input_.strikep,
+            "Base Vol.": input_.vol,
+            "Base Spot Price": input_.stockp,
+            "Shock Vol.": volume_shock,
+            "Shock Spot Price": price_shock,
+            "Base Option Value": round(base_value, 2),
+            "Shocked Option Value": round(output.optionp, 2)
+        }
+
+        result_df.append(row)
+
+    return pd.DataFrame(result_df)

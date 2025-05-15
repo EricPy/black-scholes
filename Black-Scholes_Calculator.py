@@ -1,4 +1,4 @@
-from db import Session, save_input, save_output, save_single_output
+from db import Session, save_input, save_output, save_single_output, show_recent
 from helper import black_scholes_call, black_scholes_put, create_range, hash_input
 import math
 import matplotlib.pyplot as plt
@@ -60,7 +60,7 @@ with st.container(border=True):
         st.markdown(
           f"""
           <div style='
-              background-color: #fac474;
+              background-color: #f8874f;
               padding: 20px;
               border-radius: 20px;
               text-align: center;
@@ -172,7 +172,22 @@ with st.container(border=True):
 
     # Plot Call Option Heatmap
     fig3, ax3 = plt.subplots()
-    sns.heatmap(heatmap_dataframe_call_pnl, cmap="RdYlGn", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax3)
+
+    vmax_call = heatmap_dataframe_call.max().max()
+    vmin_call = heatmap_dataframe_call.min().min()
+    max_abs_call = max(abs(vmax_call), abs(vmin_call))
+    
+    sns.heatmap(
+      heatmap_dataframe_call_pnl, 
+      cmap="RdYlGn", 
+      center=0, 
+      vmin=-max_abs_call,
+      vmax=max_abs_call,
+      annot=True, 
+      fmt=".2f", 
+      annot_kws={"size": 8}, 
+      ax=ax3
+    )
 
     plt.xlabel("Spot Price", fontsize=8)
     plt.ylabel("Volatility", fontsize=8)
@@ -182,7 +197,22 @@ with st.container(border=True):
 
     # Plot Put Option Heatmap
     fig4, ax4 = plt.subplots()
-    sns.heatmap(heatmap_dataframe_put_pnl, cmap="RdYlGn", annot=True, fmt=".2f", annot_kws={"size": 8}, ax=ax4)
+
+    vmax_put = heatmap_dataframe_put.max().max()
+    vmin_put = heatmap_dataframe_put.min().min()
+    max_abs_put = max(abs(vmax_put), abs(vmin_put))
+    
+    sns.heatmap(
+      heatmap_dataframe_put_pnl, 
+      cmap="RdYlGn", 
+      center=0, 
+      vmin=-max_abs_put,
+      vmax=max_abs_put,
+      annot=True, 
+      fmt=".2f", 
+      annot_kws={"size": 8}, 
+      ax=ax4
+    )
 
     plt.xlabel("Spot Price", fontsize=8)
     plt.ylabel("Volatility", fontsize=8)
@@ -227,8 +257,12 @@ if st.button("Store Calculation"):
     session.rollback()
     print("Rolled back due to:", e)
     st.warning("Failed to save data")
-    
+
   finally:
     session.close()
 
-# Show most recent entries into the database
+    # Show most recent entries into the database
+    st.write("#### Most Recently Stored Call / Put Calculations")
+    st.dataframe(show_recent(session, 100))
+
+
