@@ -1,4 +1,4 @@
-from db import Session, save_input, save_output
+from db import Session, save_input, save_output, save_single_output
 from helper import black_scholes_call, black_scholes_put, create_range, hash_input
 import math
 import matplotlib.pyplot as plt
@@ -207,14 +207,28 @@ if st.button("Store Calculation"):
   session = Session()
   
   try:
+    # Save input
     input_id = save_input(input_hash, session, input_dataframe)
+
+    # Save base black-scholes output
+    save_single_output(session, vol, spot, call_option, True, input_id, vol, spot)
+    save_single_output(session, vol, spot, put_option, True, input_id, vol, spot)
+
+    # Save heatmap output
     save_output(session=session, output_df=heatmap_dataframe_call, iscall=True, base_vol=input_data["vol"], base_stockp=input_data["stockp"], input_id=input_id)
     save_output(session=session, output_df=heatmap_dataframe_put, iscall=False, base_vol=input_data["vol"], base_stockp=input_data["stockp"], input_id=input_id)
+
+    # Commit Changes
     session.commit()
     st.success("Data saved successfully!")
+
   except Exception as e:
+    # Rollback changes in case of failure
     session.rollback()
     print("Rolled back due to:", e)
     st.warning("Failed to save data")
+    
   finally:
     session.close()
+
+# Show most recent entries into the database

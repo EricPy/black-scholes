@@ -67,8 +67,11 @@ def save_input(input_hash, session, input_data: pd.DataFrame):
 
 # Function to save outputs
 def save_output(session, output_df: pd.DataFrame, iscall: bool, base_vol, base_stockp, input_id):
-    
-    for index, row in output_df.iterrows():
+    """
+    Stores the result of the shock test heatmap in the bsoutputs database
+    """
+
+    for index, row in output_df.iterrows():        
         for stock_price in row.index:
             # Check if the output is unique
             output_data = {
@@ -95,3 +98,33 @@ def save_output(session, output_df: pd.DataFrame, iscall: bool, base_vol, base_s
             )
 
             session.add(bsoutput)
+
+# Function to save the base black-scholes output
+def save_single_output(session, vol, stockp, optionp, iscall, calc_id, base_vol, base_stockp):
+    # Check if the output is unique
+    output_data = {
+        "vol_shock": round((vol - base_vol), 2), # The change / shock in volume from the base input
+        "stockp_shock": round((stockp - base_stockp), 2), # The change / shock in stock price from the base input
+        "optionp": round(optionp, 2),
+        "iscall": iscall,
+        "calc_id": calc_id
+    }
+
+    # Check the hash
+    output_hash = hash_output(**output_data)
+    existing = session.query(BsOutput).filter_by(output_hash=output_hash).first()
+    if not existing:
+        bsoutput = BsOutput(
+            vol_shock=output_data["vol_shock"],
+            stockp_shock=output_data["stockp_shock"],
+            optionp=output_data["optionp"],
+            iscall=iscall,
+            calc_id=calc_id,
+            output_hash=output_hash
+        )
+
+        session.add(bsoutput)
+        return True
+    else:
+        print("Entry already exists, not saved again.")
+        return False
