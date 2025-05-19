@@ -75,25 +75,27 @@ with st.container(border=True):
 
 # Create Pricing Heatmap
 with st.container(border=True):
-    # Create range for rows and columns
     st.write("### Option Price Shock Test")
 
-    min_vol = vol - 0.1
-    max_vol = vol + 0.1
-    min_spot = spot - 9
-    max_spot = spot + 9
+    # Create default minimum and maximum values for shock test
+    default_min_vol = vol - 0.1 if vol >= 0.11 else 0.01
+    default_max_vol = vol + 0.1
+    default_min_spot = spot - 9 if spot >= 9.01 else 0.01
+    default_max_spot = spot + 9
 
+    min_vol_max = vol + 0.01 if vol == 0.01 else vol
+
+    # Create layout
     col1_range, col2_range = st.columns(2)
 
-    min_vol = col1_range.slider("Minimum Volatility", 0.01, vol, min_vol)
-    min_spot = col1_range.number_input("Minimum Spot Price", 0.01, spot, value=min_spot)
+    default_min_vol = col1_range.slider("Minimum Volatility", 0.01, min_vol_max, default_min_vol)
+    default_min_spot = col1_range.number_input("Minimum Spot Price", 0.01, spot, value=default_min_spot)
 
-    max_vol = col2_range.slider("Maximum Volatility", vol, 2.0, max_vol)
-    max_spot = col2_range.number_input("Maxmimum Spot Price", spot, value=max_spot)
+    default_max_vol = col2_range.slider("Maximum Volatility", vol, 2.0, default_max_vol)
+    default_max_spot = col2_range.number_input("Maxmimum Spot Price", spot, value=default_max_spot)
 
-    range_vol = create_range(min_vol, max_vol, 10, 2)
-    range_spot = create_range(min_spot, max_spot, 10, 2)
-
+    range_vol = create_range(default_min_vol, default_max_vol, 10, 2)
+    range_spot = create_range(default_min_spot, default_max_spot, 10, 2)
 
     # Create Heatmap Dataframe for Call options
     heatmap_data_call = []
@@ -112,7 +114,6 @@ with st.container(border=True):
       heatmap_data_call.append(data_row)
 
     heatmap_dataframe_call = pd.DataFrame(heatmap_data_call, index=range_vol, columns=range_spot)
-
 
     # Create Heatmap Dataframe for Call options
     heatmap_data_put = []
