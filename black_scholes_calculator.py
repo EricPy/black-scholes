@@ -264,6 +264,6 @@ if st.button("Store Calculation"):
 
     # Show most recent entries into the database
     st.write("#### Most Recently Stored Call / Put Calculations")
-    st.dataframe(show_recent(session, 100))
+    st.dataframe(show_recent(session, 200))
 
 
