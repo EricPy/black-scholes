@@ -10,6 +10,30 @@ import streamlit as st
 # App title
 st.set_page_config("Black-Scholes Pricing Model")
 st.title("Black-Scholes Pricing 📊")
+st.markdown(
+  """
+  <style>
+    .custom-link {
+      text-decoration: none !important;
+      color: inherit !important;
+    }
+
+    .custom-link:hover {
+      text-decoration: underline !important;
+    }
+  </style>
+  
+  <div style='
+    margin-bottom: 20px
+  '>
+    <p>
+      <span style='margin-bottom: 8px; font-weight: bold'>Created By:</span>
+      <a href='https://www.linkedin.com/in/eric-jansen-a422b11a5/' class='custom-link' target='_blank'>Eric Jansen</a>
+    </p>
+  </div>
+  """,
+  unsafe_allow_html=True
+)
 
 # Simple Black-Scholes Options Calculator
 with st.container(border=True):
