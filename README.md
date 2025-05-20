@@ -7,4 +7,4 @@ This is a Streamlit application for:
 The app uses the SQLAlchemy ORM to manage and store input/output data efficiently.
 
 ### Credits
-This project was inspired by a video made by [Tomer](https://youtu.be/lY-NP4X455U?si=Bw3ChXVAUL4BG9v3) (known as Coding Jesus) on a good pet project to break into quant trading. That video itself featured [Prudhvi Reddy](https://blackschole.streamlit.app/)'s project which this project is an expansion of.
+This project was inspired by a video made by Tomer (known as [Coding Jesus](https://youtu.be/lY-NP4X455U?si=Bw3ChXVAUL4BG9v3)) on a good pet project to break into quant trading. That video itself featured [Prudhvi Reddy](https://blackschole.streamlit.app/)'s project which this project is an expansion of.
